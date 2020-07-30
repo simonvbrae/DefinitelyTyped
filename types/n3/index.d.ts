@@ -76,13 +76,15 @@ export class DefaultGraph implements RDF.DefaultGraph {
     static subclass(type: any): void;
 }
 
-export type Quad_Subject = NamedNode | BlankNode | Variable;
+export type Quad_Subject = NamedNode | BlankNode | Variable | Quad;
 export type Quad_Predicate = NamedNode | Variable;
-export type Quad_Object = NamedNode | Literal | BlankNode | Variable;
+export type Quad_Object = NamedNode | Literal | BlankNode | Variable | Quad;
 export type Quad_Graph = DefaultGraph | NamedNode | BlankNode | Variable;
 
 export class BaseQuad implements RDF.BaseQuad {
     constructor(subject: Term, predicate: Term, object: Term, graph?: Term);
+    readonly termType: "Quad";
+    readonly value: "";
     subject: Term;
     predicate: Term;
     object: Term;
@@ -93,6 +95,8 @@ export class BaseQuad implements RDF.BaseQuad {
 
 export class Quad extends BaseQuad implements RDF.Quad {
     constructor(subject: Term, predicate: Term, object: Term, graph?: Term);
+    readonly termType: "Quad";
+    readonly value: "";
     subject: Quad_Subject;
     predicate: Quad_Predicate;
     object: Quad_Object;
@@ -113,6 +117,8 @@ export namespace DataFactory {
     function quad<Q_In extends RDF.BaseQuad = RDF.Quad, Q_Out extends BaseQuad = Quad>(subject: Q_In['subject'], predicate: Q_In['predicate'], object: Q_In['object'], graph?: Q_In['graph']): Q_Out;
     function triple(subject: RDF.Quad_Subject, predicate: RDF.Quad_Predicate, object: RDF.Quad_Object): Quad;
     function triple<Q_In extends RDF.BaseQuad = RDF.Quad, Q_Out extends BaseQuad = Quad>(subject: Q_In['subject'], predicate: Q_In['predicate'], object: Q_In['object']): Q_Out;
+    function escapeQuotes(id: string): string;
+    function unescapeQuotes(id: string): string;
 }
 
 export type ErrorCallback = (err: Error, result: any) => void;
